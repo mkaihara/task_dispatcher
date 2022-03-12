@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.23)
+project(task_scheduler LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 14)
+set(SOURCE CMAKE_SOURCE_DIR)
+
+include_directories(${PROJECT_SOURCE_DIR})
+
+set(SOURCE_FILES main.cpp)
+add_executable( task-scheduler ${SOURCE_FILES})
+
+target_include_directories(task-scheduler PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
