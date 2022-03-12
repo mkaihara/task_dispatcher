@@ -75,7 +75,7 @@ void process_file (std::string & str) {
     try{
         input_file >> j;
     } catch (json::parse_error &e) {
-        std::cout <<"Error parsing json file at byte " << e.byte << std::endl;
+        std::cerr <<"Error parsing json file at byte " << e.byte << std::endl;
         throw e;
     }
     
@@ -84,7 +84,7 @@ void process_file (std::string & str) {
     
     auto vec = j["tasks"];
     if (vec.size()==0) {
-        std::cout <<"No tasks found under \"tasks\" keyword." << std::endl;        
+        std::cerr <<"No tasks found under \"tasks\" keyword." << std::endl;        
     }
 
     for (const auto &x: vec) {
@@ -93,26 +93,41 @@ void process_file (std::string & str) {
         double num2;
         std::string type;
 
-        try {
-            num1 = x["num1"];
-            num2 = x["num2"];
-            type = x["type"];        
-        } catch (std::exception &e) {
-            std::cout <<"Data error." << std::endl;
-        }
+        auto it = x.find("num1");
+        if (it == x.end()) {
+            std::cerr << "Operand \"num1\" not found." << std::endl;
+            throw std::invalid_argument("Operand \"num1\" not found.");
+        } else 
+            num1 = x["num1"];;
+
+        it = x.find("num2");
+        if (it == x.end()) {
+            std::cerr << "Operand \"num2\" not found." << std::endl;
+            throw std::invalid_argument("Operand \"num2\" not found.");
+            
+        } else 
+           num2 = x["num2"];
+
+        it = x.find("type");
+        if (it == x.end()) {
+            std::cerr << "Task type \"type\" not found." << std::endl;
+            throw std::invalid_argument("Task type \"type\" not found.");            
+        } else 
+            type = x["type"];
 
         try {
-
             // Calls the function object corresponding to the keyword
             std::cout << (*m.at(type))(num1, num2) << " " << std::endl;
 
         } catch (std::out_of_range &e) {
-            std::cout << "Operation " << type << " not defined in the set of tasks." << std::endl;
+            std::cerr << "Operation " << type << " not defined in the set of tasks." << std::endl;
+            throw std::invalid_argument("Invalid task name.");            
         } catch (std::domain_error &e) {
-            std::cout << "Error found while processing " << type << "." << std::endl;
-            std::cout << e.what() << std::endl;
+            std::cerr << "Error found while processing " << type << ". " << e.what() << std::endl;
+            throw e;           
         } catch (std::exception &e) {
-            std::cout << "Error while processing the task file." << e.what() << std::endl;
+            std::cerr << "Error while processing the task file." << e.what() << std::endl;
+            throw e;
         }
     }
 }
