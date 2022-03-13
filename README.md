@@ -18,7 +18,7 @@ make
 ```
 Then you can run the json example file that is located in the main folder by typing 
 ```
-./task_dispatcher ../tasks.json
+./task-dispatcher ../tasks.json
 ```
 The output should be:
 ```
