@@ -3,6 +3,7 @@ This code reads the tasks from a json file and dispatches the tasks by calling t
 
 
 ## Installation
+The following procedure requires gcc, g++, cmake, make and git installed on the system.
 
 Clone the repository with the following command:
 ```
